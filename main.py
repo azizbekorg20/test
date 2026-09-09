@@ -6,6 +6,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
 # Railway Variables yoki kompyuterda environment orqali BOT_TOKEN bering.
+BOT_TOKEN = "8880088268:AAFaB9HplUgEx8pyPzW8zv0bfBGhrczmjNQ"
 BOT_TOKEN = os.getenv("8880088268:AAFaB9HplUgEx8pyPzW8zv0bfBGhrczmjNQ", "").strip()
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN ni Railway Variables ichiga kiriting.")
