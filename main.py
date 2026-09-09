@@ -4,6 +4,7 @@ import asyncio
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from html import escape
 
 # Railway Variables yoki kompyuterda environment orqali BOT_TOKEN bering.
 BOT_TOKEN = "8880088268:AAFaB9HplUgEx8pyPzW8zv0bfBGhrczmjNQ"
@@ -39,7 +40,7 @@ def next_keyboard():
 
 
 def question_text(number, total, question):
-    return f"📝 <b>{number}/{total}-savol</b>\n\n{question}"
+    return f"📝 <b>{number}/{total}-savol</b>\n\n{escape(question)}"
 
 
 @dp.message(CommandStart())
@@ -92,6 +93,117 @@ async def send_question(message: Message, user_id: int):
     )
 
 
+
+def get_explanation(question, options, correct):
+    """Noto'g'ri javob berilganda qisqa tushuntirish beradi."""
+    q = question.lower()
+    correct_text = options[correct]
+
+    if "rim raqam" in q:
+        return f"💡 Rim raqamlarida son qiymati belgilar yig'indisi/qoidalari asosida yoziladi. Bu savolda to'g'ri javob {correct_text}."
+
+    if "a += 'abc'" in q:
+        return "💡 Python stringni listga += qilishda stringning har bir belgisi alohida element sifatida qo'shiladi."
+
+    if "a += ['dunyo']" in q:
+        return "💡 Listga boshqa listni += qilish uning elementlarini listga qo'shadi."
+
+    if "a += [5]" in q:
+        return "💡 [5] list bo'lgani uchun += operatori 5 elementini mavjud listga qo'shadi."
+
+    if "elektron hukumat" in q:
+        return f"💡 Bu savolda elektron hukumatning faoliyat yo'nalishlari soni so'ralgan. To'g'ri javob: {correct_text}."
+
+    if "win + ." in q or "smaylik" in q or "emoji" in q:
+        return "💡 Windowsda Win + . tugmalari emoji/smaylik panelini ochadi."
+
+    if "ctrl+shift+i" in q or "inversiya" in q:
+        return "💡 Photoshopda Ctrl+Shift+I tanlangan sohani inversiya qiladi, ya'ni tanlovni teskarisiga o'zgartiradi."
+
+    if " & " in question:
+        return f"💡 & — bitwise AND operatori. Har bir bitda ikkala sonning biti ham 1 bo'lsa, natijada 1 hosil bo'ladi. Natija: {correct_text}."
+
+    if "<<" in question:
+        return "💡 << chapga bit siljitish operatori. 2 bit chapga siljitish sonni 2² ga, ya'ni 4 ga ko'paytirishga teng."
+
+    if ">>" in question:
+        return "💡 >> o'ngga bit siljitish operatori. Musbat butun sonlarda 2 bit o'ngga siljitish sonni 2² ga, ya'ni 4 ga bo'lishga teng."
+
+    if "tiff" in q:
+        return "💡 TIFF — Tagged Image File Format nomining qisqartmasi va rastr tasvirlar uchun ishlatiladi."
+
+    if "sanoq sistemas" in q or "₂" in question or "₈" in question or "₁₆" in question:
+        return f"💡 Sanoq sistemasini o'zgartirishda sonning har bir raqami o'z sistemasining darajasiga ko'paytiriladi. Hisoblash natijasi: {correct_text}."
+
+    if "int(a)" in q and "'5.6'" in q:
+        return "💡 int() o'nlik kasr ko'rinishidagi stringni to'g'ridan-to'g'ri butun songa aylantira olmaydi. Avval float(), keyin int() ishlatilishi kerak."
+
+    if "int(a)" in q:
+        return "💡 int() string ichidagi butun sonni integerga aylantiradi. Agar string mos formatda bo'lmasa, xatolik yuz beradi."
+
+    if "a[true]" in q or "a[false]" in q:
+        return "💡 Python'da True = 1 va False = 0 sifatida indeks bo'lib ishlatilishi mumkin."
+
+    if "a[1]" in q and "tuple" in q:
+        return "💡 Tuple o'zgarmas (immutable) obyekt. Uning mavjud elementini indeks orqali almashtirishga urinish TypeError beradi."
+
+    if "a[0] = 9" in q and "[" in question:
+        return "💡 List o'zgaruvchan (mutable), shuning uchun uning elementini indeks orqali o'zgartirish mumkin."
+
+    if "format" in q and "{0}" in question:
+        return "💡 format()da {0} birinchi argumentni, {1} esa ikkinchi argumentni bildiradi."
+
+    if "format" in q:
+        return "💡 Python format() ichidagi indekslar berilgan argumentlarning tartibini bildiradi."
+
+    if "//" in question:
+        return "💡 // — butun bo'lish operatori. U bo'lish natijasining pastga qarab yaxlitlangan butun qismini qaytaradi."
+
+    if "счётесли" in q or "shartni qanoatlantiruvchi" in q:
+        return "💡 СЧЁТЕСЛИ (COUNTIF) berilgan shartga mos keladigan kataklar sonini hisoblaydi."
+
+    if "scratch" in q:
+        return f"💡 Scratchda {correct_text} tushunchasi savolda berilgan vazifaga mos keladi."
+
+    if "bit bilan" in q or "bit yordamida" in q:
+        return "💡 n bit yordamida 2ⁿ ta turli qiymatni kodlash mumkin."
+
+    if "readline" in q:
+        return "💡 readline() fayldan bitta qatorni o'qiydi."
+
+    if "write" in q:
+        return "💡 write() faylga berilgan matnni yozish uchun ishlatiladi."
+
+    if "read" in q and "fayl" in q:
+        return "💡 read() fayldagi mavjud mazmunni o'qib olish uchun ishlatiladi."
+
+    if "del " in question:
+        return "💡 del o'zgaruvchini xotiradan o'chiradi. Keyin uning nomiga murojaat qilinsa NameError yuz beradi."
+
+    if "**" in question:
+        return "💡 Python'da ** darajaga oshirish operatori. Avval daraja, keyin // va % kabi amallar bajariladi."
+
+    if "ip:" in q and "maska" in q:
+        return "💡 Tarmoq manzilini topishda IP manzil maska bilan bitwise AND qilinadi. Host qismi 0 ga tushiriladi."
+
+    if "def f" in q or "f(n)" in q:
+        return "💡 Rekursiv funksiyada avval bazaviy holat, keyin oldingi qiymatlarga bog'langan chaqiriqlar hisoblanadi."
+
+    if "remove" in q:
+        return "💡 list.remove(x) ro'yxatdagi x qiymatining birinchi uchragan elementini o'chiradi."
+
+    if "rang" in q and ("axborot hajmi" in q or "bit" in q):
+        return "💡 Ranglar soni uchun bitlar soni log₂(ranglar soni) orqali topiladi. Keyin piksel soniga ko'paytiriladi."
+
+    if "axborot hajmi" in q:
+        return "💡 Axborot hajmi = piksel soni × bitta pikselga ketadigan bitlar. Natijani kerakli birlikka o'tkazish uchun 8 va 1024 ga bo'linadi."
+
+    if "brend" in q or "marketing" in q:
+        return f"💡 Savolda marketing/brending bo'yicha berilgan fikr muallifi aniqlanadi. To'g'ri javob: {correct_text}."
+
+    return f"💡 To'g'ri javob: {correct_text}. Noto'g'ri variant bu savoldagi qoida yoki hisoblash natijasiga mos kelmaydi."
+
+
 @dp.callback_query(F.data.startswith("ans:"))
 async def answer_question(callback: CallbackQuery):
     user_id = callback.from_user.id
@@ -119,13 +231,18 @@ async def answer_question(callback: CallbackQuery):
     letters = ["A", "B", "C", "D"]
 
     # Savol ostida o'quvchi tanlagan javobni ko'rsatamiz.
+    selected_text = escape(options[selected])
+    correct_text = escape(options[correct])
+    explanation = escape(get_explanation(question, options, correct))
+
     if is_correct:
-        result = f"✅ <b>To‘g‘ri!</b>\n\nSizning javobingiz: <b>{letters[selected]}) {options[selected]}</b>"
+        result = f"✅ <b>To‘g‘ri!</b>\n\nSizning javobingiz: <b>{letters[selected]}) {selected_text}</b>"
     else:
         result = (
             f"❌ <b>Noto‘g‘ri!</b>\n\n"
-            f"Sizning javobingiz: <b>{letters[selected]}) {options[selected]}</b>\n"
-            f"To‘g‘ri javob: <b>{letters[correct]}) {options[correct]}</b>"
+            f"Sizning javobingiz: <b>{letters[selected]}) {selected_text}</b>\n"
+            f"To‘g‘ri javob: <b>{letters[correct]}) {correct_text}</b>\n\n"
+            f"{explanation}"
         )
 
     # Javob berilgan savolning tugmalarini belgilab qo'yamiz.
